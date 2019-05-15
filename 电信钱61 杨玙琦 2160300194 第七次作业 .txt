@@ -1,0 +1,38 @@
+
+BW=imread('test2.png');  
+ 
+%BW=medfilt2(BW,[2 2])
+thresh=[0.01,0.10];    
+sigma=2;%定义高斯参数    
+f = edge(double(BW),'canny',thresh,sigma);    
+figure(1);
+subplot(121);imshow(BW); 
+subplot(122);imshow(f,[]);    
+title('canny 边缘检测');    
+[H, theta, rho]= hough(f,'theta',-89:0.01:0); 
+peak=houghpeaks(H,20);   
+hold on    
+lines=houghlines(f,theta,rho,peak,'FillGap',20,'MinLength',20);    
+figure,imshow(f,[]),title('Hough Transform Detect Result'),hold on    
+for k=1:length(lines)    
+    A=lines(k).point1(:,2);
+    if A<460
+     xy=[lines(k).point1;lines(k).point2];    
+     plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','red');   
+    end
+end    
+
+[H, theta, rho]= hough(f,'theta',0:0.01:89); 
+peak=houghpeaks(H,20);   
+hold on   
+lines=houghlines(f,theta,rho,peak,'FillGap',20,'MinLength',20);  
+for k=1:length(lines)    
+ 
+    A=lines(k).point1(:,2);
+    if A<460
+     xy=[lines(k).point1;lines(k).point2];    
+     plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','red');   
+    end
+
+end    
+
